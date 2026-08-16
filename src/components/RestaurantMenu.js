@@ -13,7 +13,13 @@ const RestaurantMenu = () => {
 
   let resinfo = useRestaurantMenu(resid);
 
-  if (resinfo.length == 0) return <Shimmer />;
+  if (!resinfo || resinfo.length == 0 || !resinfo?.data) return <Shimmer />;
+
+  const infoCard = resinfo?.data?.cards?.find(
+    (c) => c?.card?.card?.info
+  )?.card?.card?.info;
+
+  if (!infoCard) return <Shimmer />;
 
   const {
     name,
@@ -23,24 +29,18 @@ const RestaurantMenu = () => {
     avgRating,
     totalRatingsString,
     sla,
-  } = resinfo?.data?.cards[2]?.card?.card?.info;
+  } = infoCard;
 
-  const itemCards =
-    resinfo?.data?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[1]?.card
-      ?.card;
-
-  // console.log(itemCards)
-  //  console.log({itemCards});
+  const regularCards = resinfo?.data?.cards?.find(
+    (c) => c?.groupedCard?.cardGroupMap?.REGULAR
+  )?.groupedCard?.cardGroupMap?.REGULAR?.cards;
 
   const Categories =
-    resinfo?.data?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards?.filter(
-      (c) => {
-        return (
-          c.card?.card?.['@type'] ==
-          'type.googleapis.com/swiggy.presentation.food.v2.ItemCategory'
-        );
-      }
-    );
+    regularCards?.filter(
+      (c) =>
+        c.card?.card?.['@type'] ==
+        'type.googleapis.com/swiggy.presentation.food.v2.ItemCategory'
+    ) || [];
 
   // console.log(Categories);
 

@@ -25,14 +25,12 @@ const Body = () => {
 
     const json = await data.json();
 
-    setlistOfRestaurants(
-      json.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants
-    );
+    const restaurants = json?.data?.cards?.find(
+      (c) => c?.card?.card?.gridElements?.infoWithStyle?.restaurants
+    )?.card?.card?.gridElements?.infoWithStyle?.restaurants || [];
 
-    setfilteredListOfRestaurants(
-      json.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants
-    );
-
+    setlistOfRestaurants(restaurants);
+    setfilteredListOfRestaurants(restaurants);
   };
 
   const onlineStatus = useOnlineStatus();
